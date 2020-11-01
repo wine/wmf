@@ -122,6 +122,43 @@ size_t print_wm_name() {
     return strlen("wm: ") + strlen(wm);
 }
 
+size_t print_ram(){
+    char* ram;
+
+    FILE* fp = fopen("/proc/meminfo", "r");
+
+    char tmp[128];
+    char* token, *ptr;
+    size_t total_mem = 0, free_mem = 0, buffers = 0, cached = 0;
+
+    while (fgets(tmp, 127, fp) != NULL && !(total_mem && free_mem && buffers && cached)) {
+        token = strtok(tmp, " ");
+
+        if (!strcmp(token, "MemTotal:")){
+            token = strtok(NULL, " ");
+            total_mem = strtol(token, &ptr, 10);
+        } else if (!strcmp(token, "MemAvailable:")){
+            token = strtok(NULL, " ");
+            free_mem = strtol(token, &ptr, 10);
+        } else if (!strcmp(token, "Buffers:")){
+            token = strtok(NULL, " ");
+            buffers = strtol(token, &ptr, 10);
+        } else if (!strcmp(token, "Cached:")){
+            token = strtok(NULL, " ");
+            cached = strtol(token, &ptr, 10);
+        }
+    }
+
+    asprintf(&ram, "%zi/%zi mib",
+            (total_mem - free_mem - buffers) / 1024, total_mem / 1024);
+    
+    fclose(fp);
+
+    printf("ram: %s\n", ram);
+
+    return strlen("ram: ") + strlen(ram);
+}
+
 int main() {
 #ifdef USER_AND_HOST 
     print_seperator_line(print_user_name_at_host_name());
@@ -141,6 +178,10 @@ int main() {
 
 #ifdef PKGS
     print_pkgs();
+#endif
+
+#ifdef RAM
+    print_ram();
 #endif
 
 #ifdef WM

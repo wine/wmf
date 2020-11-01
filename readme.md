@@ -18,4 +18,4 @@ after editing the config recompile.
 - [x] packages
 - [ ] cpu
 - [ ] gpu
-- [ ] ram
+- [x] ram
