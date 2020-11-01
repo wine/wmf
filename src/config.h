@@ -1,11 +1,15 @@
 #define USER_AND_HOST
+
 #define KERNEL
 #define DISTRO
 #define SHELL
 #define PKGS
-#define GPU
-#define RAM
 #define WM
+
+#define GPU
+#define GPU_MANUFACTURER
+
+#define RAM
 
 #define PKGS_CMD "xbps-query -l | wc -l"
 

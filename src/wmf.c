@@ -168,8 +168,12 @@ size_t print_gpu() {
 
             token[strcspn(token, "]")] = 0;
 
+#ifdef GPU_MANUFACTURER
             asprintf(&gpu, "%s %s", manufacturer, token);
-            
+#else
+            asprintf(&gpu, "%s", token);
+#endif
+
             break;
         }
     }
@@ -178,7 +182,7 @@ size_t print_gpu() {
 
     gpu[strcspn(gpu, "\n")] = 0;
     
-    wmf_printf("gpu: %s\n", gpu);
+    wmf_printf("gpu: %s\n", to_lower(gpu));
 
     return strlen("gpu: ") + strlen(gpu);
 }
@@ -241,15 +245,15 @@ int main() {
     print_pkgs();
 #endif
 
+#ifdef WM
+    print_wm_name();
+#endif
+
 #ifdef GPU
     print_gpu();
 #endif
 
 #ifdef RAM
     print_ram();
-#endif
-
-#ifdef WM
-    print_wm_name();
 #endif
 }
