@@ -65,21 +65,13 @@ size_t print_kernel_name() {
 }
 
 size_t print_distro_name() {
-    FILE* fp = popen("lsb_release -d", "r");
-    if (fp == NULL) {
-        wmf_printf("distro: [!] error: couldn't run lsb_release\n");
-        return 0; 
-    }
+    char distro[128];
 
-    char tmp[128];
-    if (fgets(tmp, sizeof(tmp) - 1, fp) == NULL) {
-        wmf_printf("distro: [!] error: could not read output from lsb_release\n");
-        return 0; 
-    }
-
+    FILE* fp = popen("lsb_release -d", "r"); 
+    fgets(distro, sizeof(distro) - 1, fp); 
     fclose(fp);
 
-    char* token = strtok(tmp, "\t");
+    char* token = strtok(distro, "\t");
     token = strtok(NULL, "\t");
     token[strcspn(token, "\n")] = 0; 
 
@@ -100,11 +92,10 @@ size_t print_pkgs() {
     char pkgs[128];
 
     FILE* fp = popen(PKGS_CMD, "r");
-
     fgets(pkgs, 127, fp);
-    pkgs[strcspn(pkgs, "\n")] = 0; 
-    
     pclose(fp);
+
+    pkgs[strcspn(pkgs, "\n")] = 0; 
 
     wmf_printf("pkgs: %s\n", pkgs);
 
@@ -112,6 +103,8 @@ size_t print_pkgs() {
 }
 
 size_t print_wm_name() {
+    char* wm;
+
     // todo: add more wms
     char* wm_directory[] = {
         "bspwm", "dwm", "herbstluftwm"
@@ -119,10 +112,9 @@ size_t print_wm_name() {
 
     size_t wm_directory_length = sizeof(wm_directory) / sizeof(wm_directory[0]);
 
-    char* lookup = malloc(1024);
     FILE* fp = popen("ps aux", "r");
-    char* wm;
-
+    char* lookup = malloc(1024);
+    
     while (fgets(lookup, sizeof(lookup) - 1, fp) != NULL) {
         for (size_t i = 0; i != wm_directory_length; ++i){
             if (strstr(lookup, wm_directory[i]) != NULL){
@@ -181,11 +173,11 @@ size_t print_gpu() {
             break;
         }
     }
-
-    gpu[strcspn(gpu, "\n")] = 0;
     
     pclose(fp);
 
+    gpu[strcspn(gpu, "\n")] = 0;
+    
     wmf_printf("gpu: %s\n", gpu);
 
     return strlen("gpu: ") + strlen(gpu);
