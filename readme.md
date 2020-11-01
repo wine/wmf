@@ -7,7 +7,7 @@ wine's mini fetch
 simple configuration can be done in `src/config.h`, for anything more "complex"
 look at `src/main.c`.
 
-after editing the config recompile.
+after editing the config recompile and reinstall.
 
 ## installation
 `git clone https://github.com/wine/wmf && cd wmf && make && make install`
