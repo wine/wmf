@@ -14,7 +14,7 @@ after editing the config recompile.
 
 ## roadmap
 
-- [ ] ascii logo
+- [x] ascii logo
 - [x] packages
 - [ ] cpu
 - [x] gpu

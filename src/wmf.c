@@ -11,9 +11,26 @@
 
 #include "config.h"
 
+int ascii_index = 0;
+
 char* to_lower(char* str) {
   for(char *p=str; *p; p++) *p=tolower(*p);
   return str;
+}
+
+void wmf_printf(char* fmt, ...) {
+    va_list ap;
+ 
+    if (ascii_index < ASCII_SIZE) { 
+        printf(ASCII_LOGO[ascii_index]);
+        ascii_index++;
+    } else {
+        printf("\t\t");
+    } 
+
+    va_start(ap, fmt);
+    vprintf(fmt, ap);
+    va_end(ap);
 }
 
 size_t print_seperator_line(size_t length) {
@@ -21,7 +38,7 @@ size_t print_seperator_line(size_t length) {
     for (size_t i = 0; i != length; ++i)
         strcat(line, "-");
 
-    printf("%s\n", line);
+    wmf_printf("%s\n", line);
 
     return length;
 }
@@ -33,7 +50,7 @@ size_t print_user_name_at_host_name() {
     getlogin_r(login_name, LOGIN_NAME_MAX);
     gethostname(host_name, HOST_NAME_MAX);
 
-    printf("%s@%s\n", to_lower(login_name), to_lower(host_name));
+    wmf_printf("%s@%s\n", to_lower(login_name), to_lower(host_name));
 
     return strlen(login_name) + strlen("@") + strlen(host_name);
 }
@@ -42,7 +59,7 @@ size_t print_kernel_name() {
     struct utsname name;
     uname(&name);
 
-    printf("kernel: %s %s\n", to_lower(name.sysname), to_lower(name.release));
+    wmf_printf("kernel: %s %s\n", to_lower(name.sysname), to_lower(name.release));
 
     return strlen("kernel: ") + strlen(name.sysname) + strlen(name.release);
 }
@@ -50,13 +67,13 @@ size_t print_kernel_name() {
 size_t print_distro_name() {
     FILE* fp = popen("lsb_release -d", "r");
     if (fp == NULL) {
-        printf("distro: [!] error: couldn't run lsb_release\n");
+        wmf_printf("distro: [!] error: couldn't run lsb_release\n");
         return 0; 
     }
 
     char tmp[128];
     if (fgets(tmp, sizeof(tmp) - 1, fp) == NULL) {
-        printf("distro: [!] error: could not read output from lsb_release\n");
+        wmf_printf("distro: [!] error: could not read output from lsb_release\n");
         return 0; 
     }
 
@@ -66,7 +83,7 @@ size_t print_distro_name() {
     token = strtok(NULL, "\t");
     token[strcspn(token, "\n")] = 0; 
 
-    printf("distro: %s\n", to_lower(token));
+    wmf_printf("distro: %s\n", to_lower(token));
 
     return strlen("distro: ") + strlen(token);
 }
@@ -74,7 +91,7 @@ size_t print_distro_name() {
 size_t print_shell_name() {
     char* shell = getpwuid(geteuid())->pw_shell;
 
-    printf("shell: %s\n", to_lower(shell));
+    wmf_printf("shell: %s\n", to_lower(shell));
 
     return strlen("shell: ") + strlen(shell);
 }
@@ -89,7 +106,7 @@ size_t print_pkgs() {
     
     pclose(fp);
 
-    printf("pkgs: %s\n", pkgs);
+    wmf_printf("pkgs: %s\n", pkgs);
 
     return strlen("pkgs: ") + strlen(pkgs);
 }
@@ -117,7 +134,7 @@ size_t print_wm_name() {
 
     fclose(fp);
 
-    printf("wm: %s\n", to_lower(wm));
+    wmf_printf("wm: %s\n", to_lower(wm));
 
     return strlen("wm: ") + strlen(wm);
 }
@@ -169,7 +186,7 @@ size_t print_gpu() {
     
     pclose(fp);
 
-    printf("gpu: %s\n", gpu);
+    wmf_printf("gpu: %s\n", gpu);
 
     return strlen("gpu: ") + strlen(gpu);
 }
@@ -206,7 +223,7 @@ size_t print_ram() {
     
     fclose(fp);
 
-    printf("ram: %s\n", ram);
+    wmf_printf("ram: %s\n", ram);
 
     return strlen("ram: ") + strlen(ram);
 }
