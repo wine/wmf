@@ -11,3 +11,11 @@ after editing the config recompile.
 
 ## installation
 `git clone https://github.com/wine/wmf && cd wmf && make && make install`
+
+## roadmap
+
+- [ ] ascii logo
+- [ ] packages
+- [ ] cpu
+- [ ] gpu
+- [ ] ram
