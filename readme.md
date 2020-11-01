@@ -1,5 +1,5 @@
 # wmf
-wine's minimal fetch
+wine's mini fetch
 
 ![](_res/showcase.png)
 
