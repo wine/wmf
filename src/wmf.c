@@ -79,6 +79,21 @@ size_t print_shell_name() {
     return strlen("shell: ") + strlen(shell);
 }
 
+size_t print_pkgs() { 
+    char pkgs[128];
+
+    FILE* fp = popen(PKGS_CMD, "r");
+
+    fgets(pkgs, 127, fp);
+    pkgs[strcspn(pkgs, "\n")] = 0; 
+    
+    pclose(fp);
+
+    printf("pkgs: %s\n", pkgs);
+
+    return strlen("pkgs: ") + strlen(pkgs);
+}
+
 size_t print_wm_name() {
     // todo: add more wms
     char* wm_directory[] = {
@@ -122,6 +137,10 @@ int main() {
 
 #ifdef SHELL
     print_shell_name();
+#endif
+
+#ifdef PKGS
+    print_pkgs();
 #endif
 
 #ifdef WM
