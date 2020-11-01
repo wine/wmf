@@ -38,13 +38,13 @@ size_t print_user_name_at_host_name() {
     return strlen(login_name) + strlen("@") + strlen(host_name);
 }
 
-size_t print_system_name() {
+size_t print_kernel_name() {
     struct utsname name;
     uname(&name);
 
-    printf("system: %s (%s)\n", to_lower(name.sysname), to_lower(name.release));
+    printf("kernel: %s %s\n", to_lower(name.sysname), to_lower(name.release));
 
-    return strlen("system: ") + strlen(name.sysname) + strlen(" (") + strlen(name.release) + strlen(")");
+    return strlen("kernel: ") + strlen(name.sysname) + strlen(name.release);
 }
 
 size_t print_distro_name() {
@@ -127,8 +127,8 @@ int main() {
     print_seperator_line(print_user_name_at_host_name());
 #endif
 
-#ifdef SYSTEM
-    print_system_name();
+#ifdef KERNEL
+    print_kernel_name();
 #endif
 
 #ifdef DISTRO
