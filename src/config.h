@@ -3,6 +3,7 @@
 #define DISTRO
 #define SHELL
 #define PKGS
+#define GPU
 #define RAM
 #define WM
 

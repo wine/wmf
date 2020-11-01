@@ -17,5 +17,5 @@ after editing the config recompile.
 - [ ] ascii logo
 - [x] packages
 - [ ] cpu
-- [ ] gpu
+- [x] gpu
 - [x] ram

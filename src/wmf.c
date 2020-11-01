@@ -122,7 +122,59 @@ size_t print_wm_name() {
     return strlen("wm: ") + strlen(wm);
 }
 
-size_t print_ram(){
+size_t print_gpu() {
+    char* gpu;
+ 
+    FILE* fp = popen("lspci -mm", "r"); 
+
+    char tmp[128], manufacturer[128];
+ 
+    while (fgets(tmp, 127, fp) != NULL) {
+        if(strstr(tmp, "VGA compatible controller")){
+            strtok(tmp, "\"");  
+            strtok(NULL, "\""); 
+            strtok(NULL, "\"");
+ 
+            char *token = strtok(NULL, "\"");
+
+            if (strstr(token, "Intel"))
+                strcpy(manufacturer, "intel");
+            else if (strstr(token, "AMD") || strstr(token, "ATI")
+                     || strstr(token, "ATi"))
+                strcpy(manufacturer, "amd");
+            else if (strstr(token, "NVIDIA")){
+                strcpy(manufacturer, "nvidia");
+            }
+            
+            strtok(NULL, "\"");
+ 
+            token = strtok(NULL, "\"");
+
+            if (strstr(token, "[")){
+                while(*token != '['){
+                    token++;
+                }
+                token++;
+            }
+
+            token[strcspn(token, "]")] = 0;
+
+            asprintf(&gpu, "%s %s", manufacturer, token);
+            
+            break;
+        }
+    }
+
+    gpu[strcspn(gpu, "\n")] = 0;
+    
+    pclose(fp);
+
+    printf("gpu: %s\n", gpu);
+
+    return strlen("gpu: ") + strlen(gpu);
+}
+
+size_t print_ram() {
     char* ram;
 
     FILE* fp = fopen("/proc/meminfo", "r");
@@ -178,6 +230,10 @@ int main() {
 
 #ifdef PKGS
     print_pkgs();
+#endif
+
+#ifdef GPU
+    print_gpu();
 #endif
 
 #ifdef RAM
