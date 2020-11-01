@@ -92,7 +92,7 @@ size_t print_pkgs() {
     char pkgs[128];
 
     FILE* fp = popen(PKGS_CMD, "r");
-    fgets(pkgs, 127, fp);
+    fgets(pkgs, sizeof(pkgs) - 1, fp);
     pclose(fp);
 
     pkgs[strcspn(pkgs, "\n")] = 0; 
@@ -138,7 +138,7 @@ size_t print_gpu() {
 
     char tmp[128], manufacturer[128];
  
-    while (fgets(tmp, 127, fp) != NULL) {
+    while (fgets(tmp, sizeof(tmp) - 1, fp) != NULL) {
         if(strstr(tmp, "VGA compatible controller")){
             strtok(tmp, "\"");  
             strtok(NULL, "\""); 
@@ -192,7 +192,7 @@ size_t print_ram() {
     char* token, *ptr;
     size_t total_mem = 0, free_mem = 0, buffers = 0, cached = 0;
 
-    while (fgets(tmp, 127, fp) != NULL && !(total_mem && free_mem && buffers && cached)) {
+    while (fgets(tmp, sizeof(tmp) - 1, fp) != NULL && !(total_mem && free_mem && buffers && cached)) {
         token = strtok(tmp, " ");
 
         if (!strcmp(token, "MemTotal:")){
