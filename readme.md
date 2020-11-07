@@ -1,6 +1,8 @@
 # wmf
 wine's mini fetch
 
+*this project was made for [void linux](https://voidlinux.org) but can (hopefully) easily be changed to run on other distributions.*
+
 ![](_res/showcase.png)
 
 ## configuration
@@ -10,7 +12,7 @@ look at `src/main.c`.
 after editing the config recompile and reinstall.
 
 ## installation
-`git clone https://github.com/wine/wmf && cd wmf && make && make install`
+`git clone https://github.com/wine/wmf && cd wmf && make && sudo make install`
 
 ## roadmap
 
